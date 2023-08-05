@@ -10,6 +10,7 @@ int main(void) {
 	/* OCCI Variables */
 	Environment* env = nullptr;
 	Connection* conn = nullptr;
+	Statement* stmt = nullptr;
 	/* Used Variables */
 	string str;
 	string user = "dbs311_232ncc15";
@@ -18,11 +19,19 @@ int main(void) {
 	try {
 		env = Environment::createEnvironment(Environment::DEFAULT);
 		conn = env->createConnection(user, pass, constr);
-		cout << "Connection is Successful!" << endl;
+		stmt = conn->createStatement();
+
+		stmt = conn->createStatement("CREATE TABLE student (s_id NUMBER(4), name VARCHAR2(40))");
+		stmt->executeUpdate();
+
+		cout << "Table Created successfully." << endl;
+
+		conn->terminateStatement(stmt);
 		env->terminateConnection(conn);
 		Environment::terminateEnvironment(env);
 	}
 	catch (SQLException& sqlExcp) {
+		cout << "error";
 		cout << sqlExcp.getErrorCode() << ": " << sqlExcp.getMessage();
 	}
 	return 0;
