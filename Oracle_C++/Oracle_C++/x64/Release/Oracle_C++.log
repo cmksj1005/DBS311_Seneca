@@ -1,7 +1,8 @@
-﻿  main.cpp
+﻿  application.cpp
+C:\Users\cmksj\Desktop\Seneca College\Third Semester\DBS311\DBS311_Seneca\Oracle_C++\Oracle_C++\application.cpp(382,35): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
   Generating code
-  1 of 80 functions ( 1.2%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
+  121 of 121 functions (100.0%) were compiled.
+    41 functions were new in current compilation
     0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   Oracle_C++.vcxproj -> C:\Users\cmksj\Desktop\Seneca College\Third Semester\DBS311\DBS311_Seneca\Oracle_C++\x64\Release\Oracle_C++.exe
