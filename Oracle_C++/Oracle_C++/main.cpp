@@ -6,6 +6,12 @@ using oracle::occi::Connection;
 using namespace oracle::occi;
 using namespace std;
 
+struct ShoppingCart {
+	int product_id;
+	double price;
+	int quantity;
+};
+
 int main(void) {
 	/* OCCI Variables */
 	Environment* env = nullptr;
@@ -46,7 +52,6 @@ int main(void) {
 		Environment::terminateEnvironment(env);
 	}
 	catch (SQLException& sqlExcp) {
-		cout << "error";
 		cout << sqlExcp.getErrorCode() << ": " << sqlExcp.getMessage();
 	}
 	return 0;
