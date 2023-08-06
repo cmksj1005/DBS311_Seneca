@@ -11,6 +11,7 @@ int main(void) {
 	Environment* env = nullptr;
 	Connection* conn = nullptr;
 	Statement* stmt = nullptr;
+	ResultSet* rs = nullptr;
 	/* Used Variables */
 	string str;
 	string user = "dbs311_232ncc15";
@@ -19,12 +20,26 @@ int main(void) {
 	try {
 		env = Environment::createEnvironment(Environment::DEFAULT);
 		conn = env->createConnection(user, pass, constr);
-		stmt = conn->createStatement();
 
-		stmt = conn->createStatement("CREATE TABLE student (s_id NUMBER(4), name VARCHAR2(40))");
-		stmt->executeUpdate();
+		stmt = conn->createStatement("SELECT * FROM student WHERE s_id = :1");
+		stmt->setInt(1, 1004);
+		rs = stmt->executeQuery();
 
-		cout << "Table Created successfully." << endl;
+		if (!rs->next()) {
+			// if the result set is empty
+			cout << "ResultSet is empty." << endl;
+		}
+		else {
+			// if the result set in not empty
+			do {
+				if (!rs->isNull(2)) { //if the column name is not null
+					cout << "Student ID: " << rs->getInt(1) << " Student Name: " << rs->getString(2) << endl;
+				}
+				else {
+					cout << "Student ID: " << rs->getInt(1) << " Student Name: " << "Unknown" << endl;
+				}
+			} while (rs->next()); //if there is more rows, iterate
+		}
 
 		conn->terminateStatement(stmt);
 		env->terminateConnection(conn);
