@@ -207,12 +207,75 @@ void customerService(Connection* conn, int customerId) {
 
 //Complete this function
 void displayOrderStatus(Connection* conn, int orderId, int customerId) {
+    Statement* stmt = nullptr;
+    int outOrderId{};
+    string outStatus{};
 
+    stmt = conn->createStatement();
+    stmt->setSQL("BEGIN customer_order(:1, :2); END;");
+    stmt->setInt(1, customerId);
+    stmt->setInt(2, orderId);
+    stmt->execute();
+    outOrderId = stmt->getInt(2);
+
+    if (!outOrderId) {
+        cout << "Order ID is not valid." << endl;
+    }
+    else {
+        stmt->setSQL("BEGIN display_order_status (:1, :2); END;");
+        stmt->setInt(1, outOrderId);
+        stmt->registerOutParam(2, Type::OCCISTRING, sizeof(outStatus));
+        stmt->execute();
+        outStatus = stmt->getString(2);
+    }
+
+    if (outStatus == "") {
+        cout << "Order does not exist." << endl;
+    }
+    else {
+        cout << "Order is " << outStatus << endl;
+    }
+    conn->terminateStatement(stmt);
 }
 
 //Complete this function
 void cancelOrder(Connection* conn, int orderId, int customerId) {
+    Statement* stmt = nullptr;
+    int statusNum{};
+    int outOrderId{};
 
+    stmt = conn->createStatement();
+    stmt->setSQL("BEGIN customer_order(:1, :2); END;");
+    stmt->setInt(1, customerId);
+    stmt->setInt(2, orderId);
+    stmt->execute();
+    outOrderId = stmt->getInt(2);
+
+    if (outOrderId == 0) {
+        cout << "Order Id is not valid." << endl;
+    }
+    else {
+        stmt = conn->createStatement();
+        stmt->setSQL("BEGIN cancel_order(:1, :2); END;");
+        stmt->setInt(1, outOrderId);
+        stmt->setInt(2, statusNum);
+        stmt->execute();
+        statusNum = stmt->getInt(2);
+
+        if (statusNum == 0) {
+            cout << "The order does not exit." << endl;
+        }
+        else if (statusNum == 1) {
+            cout << "The order has been already canceled." << endl;
+        }
+        else if (statusNum == 2) {
+            cout << "The order is shipped and cannot be canceled." << endl;
+        }
+        else if (statusNum == 3) {
+            cout << "The order is canceled successfully." << endl;
+        }
+    }
+    conn->terminateStatement(stmt);
 }
 
 void createEnvironement(Environment* env) {
