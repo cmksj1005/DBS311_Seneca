@@ -30,7 +30,7 @@ struct Product {
 };
 
 int mainMenu();
-int subMenu(); 
+int subMenu();
 void customerService(Connection* conn, int customerId);
 void displayOrderStatus(Connection* conn, int orderId, int customerId); // you write this function
 void cancelOrder(Connection* conn, int orderId, int customerId); // you write this function
@@ -58,8 +58,8 @@ int main(void)
 
     /* Used Variables */
     string str;
-    string user = "dbs311_232ncc21";
-    string pass = "61961246";
+    string user = "dbs311_232ncc15";
+    string pass = "19030228";
     string constr = "myoracle12c.senecacollege.ca:1521/oracle12c";
 
 
@@ -71,7 +71,7 @@ int main(void)
         int customerId = 0;
 
         do {
-            
+
             option = mainMenu();
             switch (option) {
 
@@ -79,7 +79,7 @@ int main(void)
 
                 cout << "Enter the customer ID: ";
                 cin >> customerId;
-               
+
                 if (customerLogin(conn, customerId) == 1) {
                     //call customerService()
                     customerService(conn, customerId);
@@ -91,7 +91,7 @@ int main(void)
             case 0:
                 cout << "Good bye!..." << endl;
                 break;
-                
+
 
             }
         } while (option != 0);
@@ -177,7 +177,7 @@ void customerService(Connection* conn, int customerId) {
         case 1:
 
             cout << ">-------- Place an order ---------<" << endl;
-            
+
             productCount = addToCart(conn, cart);
             displayProducts(cart, productCount);
             checkedout = checkout(conn, cart, customerId, productCount);
@@ -195,7 +195,7 @@ void customerService(Connection* conn, int customerId) {
             displayOrderStatus(conn, orderId, customerId);
             break;
         case 3:
-            
+
             cout << ">-------- Cancel an Order --------<" << endl;
             cout << "Enter an order ID: ";
             cin >> orderId;
@@ -317,7 +317,7 @@ int addToCart(Connection* conn, struct ShoppingCart cart[]) {
     int productCount = 0;
     int addMore = 1;
     double price = 0;
-    
+
     Product product;
 
     cout << "-------------- Add Products to Cart --------------" << endl;
@@ -334,10 +334,10 @@ int addToCart(Connection* conn, struct ShoppingCart cart[]) {
             findProduct(conn, product_id, &product);
 
             /*if the price is zero, the product does not exist
-              if the price is greater than zero the product display the following 
+              if the price is greater than zero the product display the following
               output:
               Product Price:*/
-            
+
             if (product.price != 0) {
                 cout << "Product Name: " << product.name << endl;
                 cout << "Product Price: " << product.price << endl;
@@ -353,7 +353,7 @@ int addToCart(Connection* conn, struct ShoppingCart cart[]) {
         } while (product.price == 0);
 
         cout << "Enter the product Quantity: ";
-        cin >> cart[i].quantity; //ok 
+        cin >> cart[i].quantity; //ok
 
         productCount++;
 
@@ -365,7 +365,7 @@ int addToCart(Connection* conn, struct ShoppingCart cart[]) {
             cin >> addMore;
 
         }
-        
+
 
     }
 
@@ -379,7 +379,7 @@ void findProduct(Connection* conn, int productId, struct Product *product) {
 
     stmt = conn->createStatement("BEGIN find_product(:1, :2, :3); END;");
     stmt->setInt(1, productId);
-    stmt->registerOutParam(2, Type::OCCIDOUBLE, sizeof(product->price));    
+    stmt->registerOutParam(2, Type::OCCIDOUBLE, sizeof(product->price));
     stmt->registerOutParam(3, Type::OCCISTRING, sizeof(product->name));
     stmt->executeUpdate();
     product->price = stmt->getDouble(2);
