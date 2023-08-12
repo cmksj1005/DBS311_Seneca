@@ -39,7 +39,7 @@ void openConnection(Environment* env, Connection* conn, string user, string pass
 void closeConnection(Connection* conn, Environment* env);
 void teminateEnvironement(Environment* env);
 int customerLogin(Connection* conn, int customerId);
-void findProduct(Connection* conn, int product_id, struct Product *product);
+void findProduct(Connection* conn, int product_id, struct Product* product);
 int addToCart(Connection* conn, struct ShoppingCart cart[]);
 void displayProducts(struct ShoppingCart cart[], int productCount);
 int checkout(Connection* conn, struct ShoppingCart cart[], int customerId, int productCount);
@@ -182,10 +182,10 @@ void customerService(Connection* conn, int customerId) {
             displayProducts(cart, productCount);
             checkedout = checkout(conn, cart, customerId, productCount);
             if (checkedout) {
-               cout << "The order is successfully completed." << endl;
+                cout << "The order is successfully completed." << endl;
             }
             else {
-               cout << "The order is cancelled." << endl;
+                cout << "The order is cancelled." << endl;
             }
             break;
         case 2:
@@ -253,8 +253,8 @@ void cancelOrder(Connection* conn, int orderId, int customerId) {
         int status{};
         stmt->setSQL("BEGIN cancel_order(:1, :2); END;");
         stmt->setInt(1, orderId);
-        //stmt->registerOutParam(2, Type::OCCIINT, sizeof(status));
-        stmt->setInt(2, status); //it's working too?
+        stmt->registerOutParam(2, Type::OCCIINT, sizeof(status));
+        //stmt->setInt(2, status); //it's working too
         stmt->executeUpdate();
         status = stmt->getInt(2);
         if (status == 0) std::cout << "The order does not exit." << endl;
@@ -373,7 +373,7 @@ int addToCart(Connection* conn, struct ShoppingCart cart[]) {
 
 }
 
-void findProduct(Connection* conn, int productId, struct Product *product) {
+void findProduct(Connection* conn, int productId, struct Product* product) {
     Statement* stmt = nullptr;
     double found = 0;
 
